@@ -2,20 +2,42 @@ package org.angelfg.ejemplos.models;
 
 // import org.junit.jupiter.api.Assertions;
 import org.angelfg.ejemplos.exceptions.DineroInsuficienteException;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+//@TestInstance(TestInstance.Lifecycle.PER_CLASS) // quitar el static para que sea stateless
 class CuentaTest {
+
+    private Cuenta cuenta;
+
+    @BeforeEach // Se ejecuta antes de cada metodo
+    void initMetodoTest() {
+        System.out.println("Iniciando metodo");
+        this.cuenta = new Cuenta("Luis", BigDecimal.valueOf(1000.12345)); // reutilizamos
+    }
+
+    @AfterEach
+    void tearDown() {
+        System.out.println("Finalizando el metodo de prueba");
+    }
+
+    @BeforeAll
+    static void beforeAll() {
+        System.out.println("Inicializando el test");
+    }
+
+    @AfterAll
+    static void afterAll() {
+        System.out.println("Finalizando el test");
+    }
 
     @Test
     @DisplayName(value = "Probando nombre de la cuenta")
     void test_nombre_cuenta() {
-        Cuenta cuenta = new Cuenta("Luis", BigDecimal.valueOf(1000.12345));
+
         //cuenta.setPersona("Luis");
 
         String esperando = "Luis";
@@ -34,7 +56,7 @@ class CuentaTest {
     @Test
     @DisplayName(value = "Probando saldo de la cuenta corriente, que no sea null, mayor que cero, valor esperado")
     void test_saldo_cuenta() {
-        Cuenta cuenta = new Cuenta("Luis", BigDecimal.valueOf(1000.12345));
+        //this.cuenta = new Cuenta("Luis", BigDecimal.valueOf(1000.12345));
         assertNotNull(cuenta.getSaldo());
         assertEquals(1000.12345, cuenta.getSaldo().doubleValue()); // compara por referencia
         assertFalse(cuenta.getSaldo().compareTo(BigDecimal.ZERO) < 0); // menor que cero
@@ -53,8 +75,8 @@ class CuentaTest {
 
     @Test
     void test_debito_cuenta() {
-        Cuenta cuenta = new Cuenta("Luis", BigDecimal.valueOf(1000.12345));
-        cuenta.debito(BigDecimal.valueOf(100));
+        //this.cuenta = new Cuenta("Luis", BigDecimal.valueOf(1000.12345));
+        this.cuenta.debito(BigDecimal.valueOf(100));
 
         assertNotNull(cuenta.getSaldo());
         assertEquals(900.12345, cuenta.getSaldo().doubleValue());
@@ -63,8 +85,8 @@ class CuentaTest {
 
     @Test
     void test_credito_cuenta() {
-        Cuenta cuenta = new Cuenta("Luis", BigDecimal.valueOf(1000.12345));
-        cuenta.credito(BigDecimal.valueOf(100));
+        //Cuenta cuenta = new Cuenta("Luis", BigDecimal.valueOf(1000.12345));
+        this.cuenta.credito(BigDecimal.valueOf(100));
 
         assertNotNull(cuenta.getSaldo());
         assertEquals(1100.12345, cuenta.getSaldo().doubleValue());
@@ -73,7 +95,7 @@ class CuentaTest {
 
     @Test
     void test_dinero_insuficiente_exception() {
-        Cuenta cuenta = new Cuenta("Luis", BigDecimal.valueOf(1000.12345));
+        // Cuenta cuenta = new Cuenta("Luis", BigDecimal.valueOf(1000.12345));
 
         Exception exception = assertThrows(DineroInsuficienteException.class, () -> {
             cuenta.debito(BigDecimal.valueOf(1500));
@@ -125,7 +147,6 @@ class CuentaTest {
 
         assertTrue(banco.getCuentas().stream().anyMatch(cuenta -> cuenta.getPersona().equals("Luis")));
     }
-
 
     @Test
     @Disabled // Deshabilitamos el test, se pone en pausa o se ignora
