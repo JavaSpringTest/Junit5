@@ -2,6 +2,8 @@ package org.angelfg.ejemplos.models;
 
 // import org.junit.jupiter.api.Assertions;
 import org.angelfg.ejemplos.exceptions.DineroInsuficienteException;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -11,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CuentaTest {
 
     @Test
+    @DisplayName(value = "Probando nombre de la cuenta")
     void test_nombre_cuenta() {
         Cuenta cuenta = new Cuenta("Luis", BigDecimal.valueOf(1000.12345));
         //cuenta.setPersona("Luis");
@@ -29,6 +32,7 @@ class CuentaTest {
     }
 
     @Test
+    @DisplayName(value = "Probando saldo de la cuenta corriente, que no sea null, mayor que cero, valor esperado")
     void test_saldo_cuenta() {
         Cuenta cuenta = new Cuenta("Luis", BigDecimal.valueOf(1000.12345));
         assertNotNull(cuenta.getSaldo());
@@ -38,6 +42,7 @@ class CuentaTest {
     }
 
     @Test
+    @DisplayName(value = "Testeando referencias que sean iguales con el método equals")
     void test_referencia_cuenta() {
         Cuenta cuenta1 = new Cuenta("Angel", BigDecimal.valueOf(8900.9997));
         Cuenta cuenta2 = new Cuenta("Angel", BigDecimal.valueOf(8900.9997));
@@ -121,8 +126,12 @@ class CuentaTest {
         assertTrue(banco.getCuentas().stream().anyMatch(cuenta -> cuenta.getPersona().equals("Luis")));
     }
 
+
     @Test
+    @Disabled // Deshabilitamos el test, se pone en pausa o se ignora
+    @DisplayName("Probando relaciones entre las cuentas y el banco con assertAll")
     void test_relacion_banco_cuentas_assertAll() {
+        fail(); // Fuerza el error
         Cuenta cuenta1 = new Cuenta("Luis", BigDecimal.valueOf(2500));
         Cuenta cuenta2 = new Cuenta("Angel", BigDecimal.valueOf(1500.8989));
 
