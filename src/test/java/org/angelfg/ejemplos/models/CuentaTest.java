@@ -3,8 +3,10 @@ package org.angelfg.ejemplos.models;
 // import org.junit.jupiter.api.Assertions;
 import org.angelfg.ejemplos.exceptions.DineroInsuficienteException;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.*;
 
 import java.math.BigDecimal;
+import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -183,5 +185,52 @@ class CuentaTest {
         );
 
     }
+
+    // Pruebas de sistema operativo, etc.
+    @Test
+    @EnabledOnOs(OS.WINDOWS) // sistema operativo, solo en windows
+    void test_solo_windows() {}
+
+    @Test
+    @EnabledOnOs({ OS.LINUX, OS.MAC })
+    void test_linux_and_mac() {}
+
+    @Test
+    @DisabledOnOs(OS.WINDOWS)
+    void test_no_windows() {}
+
+    @Test
+    @EnabledOnJre(JRE.JAVA_8)
+    void test_solo_jdk8() {}
+
+    @Test
+    @DisabledOnJre(JRE.JAVA_15)
+    void test_solo_jdk15() {}
+
+    @Test
+    void test_imprimir_system_properties() {
+        Properties properties = System.getProperties();
+        properties.forEach((k, v) -> System.out.println(k + ":" + v));
+    }
+
+    @Test
+    @EnabledIfSystemProperty(named = "java.version", matches = "17.0.13")
+    void test_java_version() {}
+
+    @Test
+    @DisabledIfSystemProperty(named = "os.arch", matches = ".*32.*")
+    void test_solo_64() {}
+
+    @Test
+    @DisabledIfSystemProperty(named = "os.arch", matches = ".*32.*")
+    void test_no_64() {}
+
+    @Test
+    @EnabledIfSystemProperty(named = "user.name", matches = "PC")
+    void test_username() {}
+
+    @Test
+    @EnabledIfSystemProperty(named = "ENV", matches = "dev") // Lo configuramos en configuracionde run -ea -DENV=dev
+    void test_dev() {}
 
 }
