@@ -18,9 +18,14 @@ class CuentaTest {
         String esperando = "Luis";
         String actual = cuenta.getPersona();
 
-        assertNotNull(actual);
-        assertEquals(esperando, actual);
-        assertTrue(actual.equals("Luis"));
+        // Incluir mensajes para saber cuando falle, un error mas en concreto
+        assertNotNull(actual, "La cuenta no puede ser nula");
+        assertEquals(
+            esperando,
+            actual,
+            () -> "El nombre de la cuenta no es el que se esperaba: " + esperando + " sin embargo fue: " + actual
+        );
+        assertTrue(actual.equals("Luis"), "EL nombre de la cuenta debe ser igual a la actual");
     }
 
     @Test
@@ -131,9 +136,9 @@ class CuentaTest {
         // Ejecuta todos los assert
         // La ventaja es que muestra todos los errores y no solo el primero que falle
         assertAll(
-            () -> assertEquals("1000.8989", cuenta2.getSaldo().toPlainString()),
-            () -> assertEquals("3000", cuenta1.getSaldo().toPlainString()),
-            () -> assertEquals(2, banco.getCuentas().size()),
+            () -> assertEquals("1000.8989", cuenta2.getSaldo().toPlainString(), () -> "El valor del saldo de la cuenta 2 no es el esperado"),
+            () -> assertEquals("3000", cuenta1.getSaldo().toPlainString(),  () -> "El valor del saldo de la cuenta 1 no es el esperado"),
+            () -> assertEquals(2, banco.getCuentas().size(), () -> "El banco no tiene las cuentas esperadas"),
             () -> assertEquals("Banco del estado", cuenta1.getBanco().getNombre()),
             () -> {
                 assertEquals("Luis", banco.getCuentas()
