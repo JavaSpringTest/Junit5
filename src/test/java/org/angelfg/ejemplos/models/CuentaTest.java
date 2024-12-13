@@ -1,6 +1,7 @@
 package org.angelfg.ejemplos.models;
 
 // import org.junit.jupiter.api.Assertions;
+import org.angelfg.ejemplos.exceptions.DineroInsuficienteException;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -58,6 +59,20 @@ class CuentaTest {
         assertNotNull(cuenta.getSaldo());
         assertEquals(1100.12345, cuenta.getSaldo().doubleValue());
         assertEquals("1100.12345", cuenta.getSaldo().toPlainString());
+    }
+
+    @Test
+    void test_dinero_insuficiente_exception() {
+        Cuenta cuenta = new Cuenta("Luis", BigDecimal.valueOf(1000.12345));
+
+        Exception exception = assertThrows(DineroInsuficienteException.class, () -> {
+            cuenta.debito(BigDecimal.valueOf(1500));
+        });
+
+        String actual = exception.getMessage();
+        String esperado = "Dinero insuficiente";
+
+        assertEquals(esperado, actual);
     }
 
 }
