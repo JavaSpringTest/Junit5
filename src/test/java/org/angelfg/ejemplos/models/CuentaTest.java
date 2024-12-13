@@ -116,4 +116,37 @@ class CuentaTest {
         assertTrue(banco.getCuentas().stream().anyMatch(cuenta -> cuenta.getPersona().equals("Luis")));
     }
 
+    @Test
+    void test_relacion_banco_cuentas_assertAll() {
+        Cuenta cuenta1 = new Cuenta("Luis", BigDecimal.valueOf(2500));
+        Cuenta cuenta2 = new Cuenta("Angel", BigDecimal.valueOf(1500.8989));
+
+        Banco banco = new Banco();
+        banco.addCuenta(cuenta1);
+        banco.addCuenta(cuenta2);
+
+        banco.setNombre("Banco del estado");
+        banco.transferir(cuenta2, cuenta1, BigDecimal.valueOf(500));
+
+        // Ejecuta todos los assert
+        // La ventaja es que muestra todos los errores y no solo el primero que falle
+        assertAll(
+            () -> assertEquals("1000.8989", cuenta2.getSaldo().toPlainString()),
+            () -> assertEquals("3000", cuenta1.getSaldo().toPlainString()),
+            () -> assertEquals(2, banco.getCuentas().size()),
+            () -> assertEquals("Banco del estado", cuenta1.getBanco().getNombre()),
+            () -> {
+                assertEquals("Luis", banco.getCuentas()
+                        .stream()
+                        .filter(cuenta -> cuenta.getPersona().equals("Luis"))
+                        .findFirst()
+                        .get()
+                        .getPersona()
+                );
+            },
+            () -> assertTrue(banco.getCuentas().stream().anyMatch(cuenta -> cuenta.getPersona().equals("Luis")))
+        );
+
+    }
+
 }
