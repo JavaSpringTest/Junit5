@@ -313,4 +313,19 @@ class CuentaTest {
 
     }
 
+    @DisplayName("Probando debito cuenta repetir!")
+    @RepeatedTest(value = 5, name = "{displayName} - Repetición numero {currentRepetition} de {totalRepetitions}") // Repite el test las veces que las necesitemos
+    void test_debito_cuenta_repetir(RepetitionInfo info) { // info obtener informacion DI
+
+        if (info.getCurrentRepetition() == 3) {
+            System.out.println("Estamos en la repeticion " + info.getCurrentRepetition());
+        }
+
+        cuenta.debito(BigDecimal.valueOf(100));
+
+        assertNotNull(cuenta.getSaldo());
+        assertEquals(900.12345, cuenta.getSaldo().doubleValue());
+        assertEquals("900.12345", cuenta.getSaldo().toPlainString());
+    }
+
 }
