@@ -51,6 +51,7 @@ class CuentaTest {
     @DisplayName("Probando atributos de la cuenta corriente")
     class CuentaOperacionesTest {
 
+        @Tag("cuenta")
         @Test
         @DisplayName(value = "Probando nombre de la cuenta")
         void test_nombre_cuenta() {
@@ -70,6 +71,8 @@ class CuentaTest {
             assertTrue(actual.equals("Luis"), "EL nombre de la cuenta debe ser igual a la actual");
         }
 
+        @Tag("cuenta")
+        @Tag("banco")
         @Test
         @DisplayName(value = "Probando saldo de la cuenta corriente, que no sea null, mayor que cero, valor esperado")
         void test_saldo_cuenta() {
@@ -110,6 +113,8 @@ class CuentaTest {
             assertEquals("1100.12345", cuenta.getSaldo().toPlainString());
         }
 
+        @Tag("cuenta")
+        @Tag("error")
         @Test
         void test_dinero_insuficiente_exception() {
             // Cuenta cuenta = new Cuenta("Luis", BigDecimal.valueOf(1000.12345));
@@ -137,6 +142,8 @@ class CuentaTest {
             assertEquals("3000", cuenta1.getSaldo().toPlainString());
         }
 
+        @Tag("cuenta")
+        @Tag("banco")
         @Test
         void test_relacion_banco_cuentas() {
             Cuenta cuenta1 = new Cuenta("Luis", BigDecimal.valueOf(2500));
@@ -289,6 +296,7 @@ class CuentaTest {
 
     }
 
+    @Tag("cuenta")
     @Nested
     class CuentaNombreSaldoTest {
 
@@ -320,6 +328,7 @@ class CuentaTest {
 
     }
 
+    @Tag("param")
     @DisplayName("Probando debito cuenta repetir!")
     @RepeatedTest(value = 5, name = "{displayName} - Repetición numero {currentRepetition} de {totalRepetitions}") // Repite el test las veces que las necesitemos
     void test_debito_cuenta_repetir(RepetitionInfo info) { // info obtener informacion DI
@@ -335,6 +344,7 @@ class CuentaTest {
         assertEquals("900.12345", cuenta.getSaldo().toPlainString());
     }
 
+    @Tag("param") // lo integra a todos los metodos
     @Nested
     class PruebasParametrizadasTest {
 
