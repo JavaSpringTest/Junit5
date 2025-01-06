@@ -6,9 +6,14 @@ import org.angelfg.ejemplos.exceptions.DineroInsuficienteException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.*;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -331,12 +336,42 @@ class CuentaTest {
     }
 
     // Casos en un mismo test
-    @ParameterizedTest(name = "Numer {index} ejecutando con el valor {0} - {argumentsWithNames}")
+    @ParameterizedTest(name = "Numero {index} ejecutando con el valor {0} - {argumentsWithNames}")
     @ValueSource(strings = { "100", "200", "300", "500", "700", "1000" })
-    void test_debito_cuenta(String monto) {
+    void test_debito_cuenta_value_source(String monto) {
         cuenta.debito(new BigDecimal(monto));
         assertNotNull(cuenta.getSaldo());
         assertTrue(cuenta.getSaldo().compareTo(BigDecimal.ZERO) > 0);
     }
+
+    @ParameterizedTest(name = "Numero {index} ejecutando con el valor {0} - {argumentsWithNames}")
+    @CsvSource({ "1,100", "2,200", "3,300", "4,500", "5,700", "6,1000" }) // index, value
+    void test_debito_cuenta_csv_source(String index, String monto) {
+        System.out.println(index + " -> " + monto);
+        cuenta.debito(new BigDecimal(monto));
+        assertNotNull(cuenta.getSaldo());
+        assertTrue(cuenta.getSaldo().compareTo(BigDecimal.ZERO) > 0);
+    }
+
+    @ParameterizedTest(name = "Numero {index} ejecutando con el valor {0} - {argumentsWithNames}")
+    @CsvFileSource(resources = "/data.csv") // archivo en resource .csv
+    void test_debito_cuenta_csv_file_source(String monto) {
+        cuenta.debito(new BigDecimal(monto));
+        assertNotNull(cuenta.getSaldo());
+        assertTrue(cuenta.getSaldo().compareTo(BigDecimal.ZERO) > 0);
+    }
+
+    @ParameterizedTest(name = "Numero {index} ejecutando con el valor {0} - {argumentsWithNames}")
+    @MethodSource("montoList") // metodo montoList()
+    void test_debito_cuenta_method_source(String monto) {
+        cuenta.debito(new BigDecimal(monto));
+        assertNotNull(cuenta.getSaldo());
+        assertTrue(cuenta.getSaldo().compareTo(BigDecimal.ZERO) > 0);
+    }
+
+    static List<String> montoList() {
+        return Arrays.asList("100", "200", "300", "500", "700", "1000");
+    }
+
 
 }
