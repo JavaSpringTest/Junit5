@@ -26,8 +26,20 @@ class CuentaTest {
 
     private Cuenta cuenta;
 
+    private TestInfo testInfo;
+    private TestReporter reporter;
+
     @BeforeEach // Se ejecuta antes de cada metodo
-    void initMetodoTest() {
+    void initMetodoTest(TestInfo testInfo, TestReporter reporter) {
+        this.testInfo = testInfo;
+        this.reporter = reporter;
+
+        // timestamp = 2025-01-16T13:25:56.924021900, value = Ejecutando: Probando nombre de la cuenta test_nombre_cuenta con las etiquetas[cuenta]
+        reporter.publishEntry("Ejecutando: " +
+                testInfo.getDisplayName() + " " +
+                testInfo.getTestMethod().orElse(null).getName() +
+                " con las etiquetas" + testInfo.getTags());
+
         System.out.println("Iniciando metodo");
         this.cuenta = new Cuenta("Luis", BigDecimal.valueOf(1000.12345)); // reutilizamos
     }
@@ -55,6 +67,11 @@ class CuentaTest {
         @Test
         @DisplayName(value = "Probando nombre de la cuenta")
         void test_nombre_cuenta() {
+
+            reporter.publishEntry(testInfo.getTags().toString()); // timestamp = 2025-01-16T13:26:50.159690600, value = [cuenta]
+            if (testInfo.getTags().contains("cuenta")) {
+                reporter.publishEntry("Hacer algo con la etiqueta cuenta"); // timestamp = 2025-01-16T13:26:50.159690600, value = Hacer algo con la etiqueta cuenta
+            }
 
             //cuenta.setPersona("Luis");
 
