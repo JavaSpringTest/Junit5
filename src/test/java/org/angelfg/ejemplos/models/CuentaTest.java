@@ -12,10 +12,12 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -413,6 +415,30 @@ class CuentaTest {
             return Arrays.asList("100", "200", "300", "500", "700", "1000");
         }
 
+    }
+
+    @Nested
+    @Tag("timeout")
+    class EjemploTimeout {
+
+        @Test
+        @Timeout(1) // 5 segundos maximo
+        void prueba_timeout() throws InterruptedException {
+            TimeUnit.SECONDS.sleep(1);
+        }
+
+        @Test
+        @Timeout(value = 1000, unit = TimeUnit.MILLISECONDS)
+        void prueba_timeout_2() throws InterruptedException {
+            TimeUnit.MILLISECONDS.sleep(900);
+        }
+
+        @Test
+        void prueba_timeout_assertions() {
+            assertTimeout(Duration.ofSeconds(5), () -> {
+                TimeUnit.MILLISECONDS.sleep(4000);
+            });
+        }
     }
 
 }
